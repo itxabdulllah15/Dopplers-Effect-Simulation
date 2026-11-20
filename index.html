@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doppler Effect – Interactive Physics Simulation | Abdullah Ashraf</title>
+  <meta name="description" content="Interactive Doppler Effect physics simulation with live wavefronts, real sound, calculator, formulas and quiz. Presented by Abdullah Ashraf.">
+  <link rel="icon" href="assets/logo/aa-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body data-theme="dark">
+<a class="skip-link" href="#simulator">Skip to simulation</a>
+
+<!-- ======================= ICON SPRITE ======================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 4.5h3.5v15H7zM13.5 4.5H17v15h-3.5z" fill="currentColor"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M5 5v14M9 12l10-7v14z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9.5h4l5-4v13l-5-4H4zM16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9.5h4l5-4v13l-5-4H4zM17 9.5l4 5M21 9.5l-4 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-full" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-present" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 16v4M8 20h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-replay" viewBox="0 0 24 24"><path d="M5 12a7 7 0 1 0 2.2-5.1M5 4.5v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 9.5v5l4-2.5z" fill="currentColor"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-clear" viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 7h7M8.5 12h2M13.5 12h2M8.5 16h2M13.5 16h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- ======================= IMAGE ASSETS =======================
+     HOW TO REPLACE A PICTURE: change the  src="..."  below to your own file
+     (PNG / JPG / SVG / WEBP, transparent background for car & person).
+     If a picture cannot be loaded, the alt text ("no image") is shown and the
+     simulation draws a "NO IMAGE" placeholder box in its place.
+     • Car must FACE RIGHT with its wheels touching the bottom edge.
+     • Person must FACE RIGHT with the feet touching the bottom edge.
+     • Optional full background: add src="assets/backgrounds/background.png"
+       to #asset-bg (wide landscape, 2:1). Leave it empty to use the built-in scene. -->
+<div class="asset-store" aria-hidden="true">
+  <img id="asset-car"    data-asset="car"    src="assets/car/car.png"             alt="no image – add your red car image here (assets/car/car.svg)">
+  <img id="asset-person" data-asset="person" src="assets/character/person.png"    alt="no image – add your person image here (assets/character/person.svg)">
+  <img id="asset-bg"     data-asset="bg"                                          alt="optional background image (none)">
+</div>
+
+<!-- ======================= INTRO ======================= -->
+<div id="intro" class="intro" role="dialog" aria-label="Introduction" aria-live="polite">
+  <div class="intro-glow"></div>
+  <div class="intro-center">
+    <div class="intro-rings" aria-hidden="true"><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span></div>
+    <div class="intro-halo" aria-hidden="true"></div>
+    <img class="intro-logo" data-asset="logo" src="assets/logo/aa-logo.svg" alt="AA logo – no image">
+  </div>
+  <h1 class="intro-title" id="intro-title" aria-label="DOPPLER EFFECT">DOPPLER EFFECT</h1>
+  <svg class="intro-wave" id="intro-wave" viewBox="0 0 420 44" aria-hidden="true"><path id="intro-wave-path" d="" pathLength="1"/></svg>
+  <p class="intro-sub">INTERACTIVE PHYSICS SIMULATION</p>
+  <p class="intro-by"><span>PRESENTED BY</span> ABDULLAH ASHRAF</p>
+  <button type="button" id="skip-intro" class="btn ghost intro-skip">Skip Intro <svg class="ic"><use href="#i-restart"/></svg></button>
+</div>
+
+<!-- ======================= HEADER ======================= -->
+<header class="app-header" id="top">
+  <div class="header-row">
+    <div class="brand">
+      <img class="brand-logo" data-asset="logo" src="assets/logo/aa-logo.svg" alt="AA logo – no image" width="52" height="52">
+      <div class="brand-text">
+        <h1>DOPPLER EFFECT</h1>
+        <p><span>Interactive Physics Simulation</span><span class="dot">•</span><span>Presented by <strong>Abdullah Ashraf</strong></span></p>
+      </div>
+    </div>
+
+    <div class="mode-switch" role="group" aria-label="Simulation mode">
+      <button type="button" class="mode-btn" data-mode="A" aria-pressed="true"  data-tip="Car stays still, the person moves"><b>A</b> Moving Listener</button>
+      <button type="button" class="mode-btn" data-mode="B" aria-pressed="false" data-tip="Person stays still, the car moves"><b>B</b> Moving Source</button>
+      <button type="button" class="mode-btn" data-mode="C" aria-pressed="false" data-tip="Advanced: both move"><b>C</b> Both Moving</button>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" id="btn-sound" class="btn icon" aria-pressed="false" data-tip="Sound on / off (S)" aria-label="Sound on or off"><svg class="ic"><use href="#i-mute"/></svg><span class="lbl">Sound Off</span></button>
+      <button type="button" id="btn-theme" class="btn icon" data-tip="Light / dark theme (T)" aria-label="Switch theme"><svg class="ic"><use href="#i-sun"/></svg><span class="lbl">Light</span></button>
+      <button type="button" id="btn-present" class="btn icon" aria-pressed="false" data-tip="Presentation mode (P)" aria-label="Presentation mode"><svg class="ic"><use href="#i-present"/></svg><span class="lbl">Present</span></button>
+      <button type="button" id="btn-fullscreen" class="btn icon" data-tip="Full-screen simulation (F)" aria-label="Full screen"><svg class="ic"><use href="#i-full"/></svg><span class="lbl">Full screen</span></button>
+      <button type="button" id="btn-replay" class="btn icon" data-tip="Replay the introduction" aria-label="Replay introduction"><svg class="ic"><use href="#i-replay"/></svg><span class="lbl">Intro</span></button>
+      <button type="button" id="btn-resetall" class="btn icon danger" data-tip="Reset everything to defaults" aria-label="Reset all"><svg class="ic"><use href="#i-reset"/></svg><span class="lbl">Reset All</span></button>
+    </div>
+  </div>
+  <nav class="section-nav" aria-label="Page sections">
+    <a href="#simulator">Simulation</a><a href="#calculator">Calculator</a><a href="#learn">Understanding</a>
+    <a href="#formulas">Formulas</a><a href="#compare">Comparison</a><a href="#applications">Applications</a><a href="#quiz-section">Quiz</a>
+  </nav>
+</header>
+
+<!-- ======================= SIMULATOR ======================= -->
+<main id="simulator" class="sim" tabindex="-1">
+  <div class="sim-grid">
+    <section class="scene-column" aria-label="Doppler effect simulation">
+      <div class="scene-wrap" id="scene-wrap">
+        <canvas id="scene" width="1600" height="800" tabindex="0" role="img" aria-label="Doppler effect scene: drag the red car and the person; a sine wave travels between them"></canvas>
+
+        <div class="scene-toolbar" id="scene-toolbar">
+          <div class="tb-group" role="group" aria-label="Playback">
+            <button type="button" id="btn-play"    class="btn primary" data-tip="Play (Space)"><svg class="ic"><use href="#i-play"/></svg>Play</button>
+            <button type="button" id="btn-pause"   class="btn"         data-tip="Pause (Space)"><svg class="ic"><use href="#i-pause"/></svg>Pause</button>
+            <button type="button" id="btn-reset"   class="btn"         data-tip="Back to the start, paused (R)"><svg class="ic"><use href="#i-reset"/></svg>Reset</button>
+            <button type="button" id="btn-restart" class="btn"         data-tip="Start again and play"><svg class="ic"><use href="#i-restart"/></svg>Restart</button>
+          </div>
+          <div class="tb-group case-controls drag-hint" id="case-controls" role="note"></div>
+          <div class="tb-group tb-extra">
+            <button type="button" id="btn-fs2" class="btn icon" data-tip="Full screen (F)" aria-label="Full screen"><svg class="ic"><use href="#i-full"/></svg></button>
+            <button type="button" id="btn-exit-present" class="btn icon exit-present" aria-label="Exit presentation mode"><svg class="ic"><use href="#i-close"/></svg><span class="lbl">Exit</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="scene-caption" id="scene-caption" aria-live="polite">
+        <h2 id="scene-title">STATIONARY SOURCE – MOVING LISTENER</h2>
+        <p id="scene-text"></p>
+      </div>
+
+      <div class="live-strip" aria-label="Live readout">
+        <div class="chip"><span>Observed frequency</span><strong id="live-fobs" class="green">482.2 Hz</strong></div>
+        <div class="chip"><span>Pitch</span><strong id="live-pitch">▲ higher</strong></div>
+        <div class="chip" data-tip="Frequency measured by counting the wavefronts that actually reach the listener"><span>Measured from wavefronts</span><strong id="live-meas">–</strong></div>
+        <div class="chip"><span>Wavefronts received</span><strong id="live-hits">0</strong></div>
+        <div class="chip scale-note"><span>Scale</span><strong id="scale-note">1 m = 110 px · slow-motion</strong></div>
+      </div>
+
+      <!-- ========== VALUES PANEL (updates immediately with every control) ========== -->
+      <section class="values-panel" aria-label="Values panel">
+        <h2>Values <small>live · all numbers come from the same formulas as the animation</small></h2>
+        <div class="values-grid" id="values-grid">
+          <div class="val" data-k="f"><span>Source frequency</span><strong class="c-cyan"></strong></div>
+          <div class="val" data-k="fobs"><span>Observed frequency</span><strong class="c-green"></strong></div>
+          <div class="val" data-k="v"><span>Speed of sound</span><strong></strong></div>
+          <div class="val" data-k="vs"><span>Source velocity</span><strong class="red"></strong></div>
+          <div class="val" data-k="vL"><span>Listener velocity</span><strong class="blue"></strong></div>
+          <div class="val" data-k="lam"><span>Original wavelength</span><strong class="c-purple"></strong></div>
+          <div class="val" data-k="lamF"><span>Wavelength in front of source</span><strong class="c-teal"></strong></div>
+          <div class="val" data-k="lamB"><span>Wavelength behind source</span><strong class="c-yellow"></strong></div>
+          <div class="val" data-k="lamObs"><span>Observed wavelength (at listener)</span><strong class="c-teal"></strong></div>
+          <div class="val" data-k="df"><span>Frequency difference</span><strong class="c-green"></strong></div>
+          <div class="val" data-k="dlam"><span>Wavelength difference</span><strong class="c-yellow"></strong></div>
+          <div class="val" data-k="pct"><span>Frequency change</span><strong></strong></div>
+          <div class="val wide" data-k="src"><span>Source movement</span><strong class="txt"></strong></div>
+          <div class="val wide" data-k="lis"><span>Listener movement</span><strong class="txt"></strong></div>
+          <div class="val full" data-k="formula"><span>Formula used</span><strong class="txt formula-line"></strong></div>
+          <div class="val full" data-k="cond"><span>Doppler Effect condition</span><strong class="txt"></strong></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ---------- controls ---------- -->
+    <aside class="controls-panel" aria-label="Simulation controls">
+      <div class="panel-block">
+        <h2>Parameters</h2>
+        <div class="ctl" id="row-f">
+          <label for="sl-f">Original frequency <i>f</i></label><output id="out-f" for="sl-f">440 Hz</output>
+          <input type="range" id="sl-f" min="100" max="1000" step="1" value="440">
+          <div class="range-ends"><span>100 Hz</span><span>1000 Hz</span></div>
+        </div>
+        <div class="ctl" id="row-v">
+          <label for="sl-v">Speed of sound <i>v</i></label><output id="out-v" for="sl-v">343 m/s</output>
+          <input type="range" id="sl-v" min="200" max="400" step="1" value="343">
+          <div class="range-ends"><span>200 m/s</span><span>400 m/s</span></div>
+        </div>
+        <div class="ctl" id="row-vs">
+          <label for="sl-vs">Max source speed <i>v<sub>s</sub></i></label><output id="out-vs" for="sl-vs" class="red">80 m/s</output>
+          <input type="range" id="sl-vs" min="0" max="100" step="1" value="80">
+          <div class="range-ends"><span>0</span><span>100 m/s (subsonic)</span></div>
+        </div>
+        <div class="ctl" id="row-vL">
+          <label for="sl-vL">Max listener speed <i>v<sub>L</sub></i></label><output id="out-vL" for="sl-vL" class="blue">80 m/s</output>
+          <input type="range" id="sl-vL" min="0" max="100" step="1" value="80">
+          <div class="range-ends"><span>0</span><span>100 m/s</span></div>
+        </div>
+        <div class="ctl" id="row-speed">
+          <label for="sl-speed">Animation speed</label><output id="out-speed" for="sl-speed">1.0×</output>
+          <input type="range" id="sl-speed" min="0.5" max="2" step="0.1" value="1">
+          <div class="range-ends"><span>0.5×</span><span>2×</span></div>
+        </div>
+      </div>
+
+      <div class="panel-block">
+        <h2>Sound <small id="audio-status">stopped</small></h2>
+        <div class="btn-row">
+          <button type="button" id="btn-play-sound"  class="btn primary" data-tip="Start the tone"><svg class="ic"><use href="#i-sound"/></svg>Play Sound</button>
+          <button type="button" id="btn-pause-sound" class="btn" data-tip="Stop the tone"><svg class="ic"><use href="#i-pause"/></svg>Pause</button>
+          <button type="button" id="btn-mute" class="btn" aria-pressed="false" data-tip="Mute / unmute (M)"><svg class="ic"><use href="#i-mute"/></svg><span id="mute-lbl">Mute</span></button>
+        </div>
+        <div class="seg" role="group" aria-label="Which tone to play">
+          <button type="button" id="tone-orig" aria-pressed="false" data-tip="Plays the source's own frequency f">Original tone</button>
+          <button type="button" id="tone-obs"  aria-pressed="true"  data-tip="Plays the observed frequency f′">Observed tone</button>
+        </div>
+        <div class="ctl">
+          <label for="sl-vol">Volume</label><output id="out-vol" for="sl-vol">50%</output>
+          <input type="range" id="sl-vol" min="0" max="100" step="1" value="50">
+        </div>
+        <label class="check" data-tip="Quieter when far away. Changes loudness only – never the pitch."><input type="checkbox" id="chk-atten"> Distance loudness (volume only)</label>
+        <p class="hint">Pitch = frequency. Loudness = amplitude. They are controlled separately.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- ======================= CALCULATOR ======================= -->
+<section id="calculator" class="section" aria-labelledby="calc-h">
+  <div class="section-head"><p class="eyebrow">Live calculator</p><h2 id="calc-h">Doppler Effect Calculator</h2></div>
+  <div class="calc-grid">
+    <form class="calc-form panel-block" id="calc-form" autocomplete="off" onsubmit="return false">
+      <label class="check sync"><input type="checkbox" id="calc-sync" checked> Follow the simulation (live)</label>
+      <div class="field">
+        <label for="calc-scenario">Situation</label>
+        <select id="calc-scenario">
+          <option value="1">Stationary source – listener moving towards</option>
+          <option value="2">Stationary source – listener moving away</option>
+          <option value="3">Moving source approaching – stationary listener</option>
+          <option value="4">Moving source moving away – stationary listener</option>
+          <option value="5">Advanced: moving source + moving listener</option>
+        </select>
+      </div>
+      <div class="field-row" id="cf-dirs" hidden>
+        <div class="field"><label for="calc-srcdir">Source is moving</label>
+          <select id="calc-srcdir"><option value="1">towards (−vs)</option><option value="-1">away (+vs)</option></select></div>
+        <div class="field"><label for="calc-lisdir">Listener is moving</label>
+          <select id="calc-lisdir"><option value="1">towards (+vL)</option><option value="-1">away (−vL)</option></select></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="calc-f">Original frequency f (Hz)</label><input type="number" id="calc-f" value="440" step="any" inputmode="decimal"></div>
+        <div class="field"><label for="calc-v">Speed of sound v (m/s)</label><input type="number" id="calc-v" value="343" step="any" inputmode="decimal"></div>
+      </div>
+      <div class="field-row">
+        <div class="field" id="cf-vs"><label for="calc-vs">Source velocity vs (m/s)</label><input type="number" id="calc-vs" value="30" step="any" inputmode="decimal"></div>
+        <div class="field" id="cf-vL"><label for="calc-vL">Listener velocity vL (m/s)</label><input type="number" id="calc-vL" value="30" step="any" inputmode="decimal"></div>
+      </div>
+      <div class="btn-row">
+        <button type="button" id="calc-run"   class="btn primary"><svg class="ic"><use href="#i-calc"/></svg>Calculate</button>
+        <button type="button" id="calc-clear" class="btn"><svg class="ic"><use href="#i-clear"/></svg>Clear</button>
+        <button type="button" id="calc-copy"  class="btn"><svg class="ic"><use href="#i-copy"/></svg>Copy calculation</button>
+        <button type="button" id="calc-reset" class="btn"><svg class="ic"><use href="#i-reset"/></svg>Reset values</button>
+      </div>
+    </form>
+    <div class="calc-out panel-block" id="calc-out" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ======================= LEARN ======================= -->
+<section id="learn" class="section" aria-labelledby="learn-h">
+  <div class="section-head"><p class="eyebrow">Physics learning</p><h2 id="learn-h">UNDERSTANDING THE DOPPLER EFFECT</h2></div>
+  <blockquote class="definition">“The Doppler Effect is the apparent change in frequency of a wave due to the relative motion between the source of the wave and the observer.”</blockquote>
+  <div class="var-grid" id="var-grid"></div>
+</section>
+
+<!-- ======================= FORMULAS ======================= -->
+<section id="formulas" class="section" aria-labelledby="form-h">
+  <div class="section-head"><p class="eyebrow">Reference</p><h2 id="form-h">Complete Formula Sheet</h2>
+    <button type="button" class="btn" id="btn-copy-formulas"><svg class="ic"><use href="#i-copy"/></svg>Copy Formula</button></div>
+  <div class="formula-sheet" id="formula-sheet"></div>
+  <p class="units" id="units-line"></p>
+</section>
+
+<!-- ======================= COMPARE ======================= -->
+<section id="compare" class="section" aria-labelledby="cmp-h">
+  <div class="section-head"><p class="eyebrow">At a glance</p><h2 id="cmp-h">The Four Basic Situations</h2></div>
+  <div class="table-wrap">
+    <table class="compare">
+      <thead><tr><th>Situation</th><th>Moving object</th><th>Stationary object</th><th>Formula</th><th>Frequency behaviour</th><th>Wavelength behaviour</th></tr></thead>
+      <tbody id="compare-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ======================= APPLICATIONS ======================= -->
+<section id="applications" class="section" aria-labelledby="app-h">
+  <div class="section-head"><p class="eyebrow">Real life</p><h2 id="app-h">Real-Life Applications</h2></div>
+  <div class="app-grid" id="app-grid"></div>
+</section>
+
+<!-- ======================= QUIZ ======================= -->
+<section id="quiz-section" class="section" aria-labelledby="quiz-h">
+  <div class="section-head"><p class="eyebrow">Test yourself</p><h2 id="quiz-h">Interactive Quiz</h2></div>
+  <div class="quiz panel-block" id="quiz" aria-live="polite"></div>
+</section>
+
+<footer class="site-footer">
+  <img class="foot-logo" data-asset="logo" src="assets/logo/aa-logo.svg" alt="AA logo – no image" width="44" height="44">
+  <p class="foot-title">DOPPLER EFFECT</p>
+  <p>INTERACTIVE PHYSICS SIMULATION</p>
+  <p class="foot-by">Developed and Presented by <strong>ABDULLAH ASHRAF</strong></p>
+  <p class="foot-keys">Shortcuts: <kbd>Space</kbd> play/pause · <kbd>R</kbd> reset · <kbd>F</kbd> full screen · <kbd>P</kbd> presentation · <kbd>S</kbd> sound · <kbd>M</kbd> mute · <kbd>T</kbd> theme</p>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="physics.js?v=3"></script>
+<script src="engine.js?v=3"></script>
+<script src="audio.js?v=3"></script>
+<script src="scene.js?v=3"></script>
+<script src="content.js?v=3"></script>
+<script src="script.js?v=3"></script>
+</body>
+</html>
