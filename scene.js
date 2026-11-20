@@ -318,7 +318,7 @@
     });
 
     // name tags + hints (follow the objects, they carry no values)
-    this._nameTag(sim.src.x, L.carBottom + 44, 'SOURCE', COL.red, 'src', fade);
+    this._nameTag(sim.src.x, L.sourceTagY, 'SOURCE', COL.red, 'src', fade);
     this._nameTag(sim.lis.x, L.personFeet - L.personHeight - 30, 'LISTENER', COL.blue, 'lis', fade);
 
     if (r.valid) { this._info(e, r, fade); this._banner(e, r); this._hud(e, r); }

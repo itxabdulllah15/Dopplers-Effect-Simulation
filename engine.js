@@ -33,10 +33,11 @@
     axisY: 505,                 // ear height (green pulse / hit marker is drawn on the wave line)
     waveY: 372,                 // centre line of the sine wave (sky, above car and person)
     waveAmp: 30,
-    carBottom: 585, carWidth: 460,
-    personFeet: 668, personHeight: 198,
+    carBottom: 640, carWidth: 500,
+    sourceTagY: 629,            // fixed height of the "SOURCE" tag under the car (does NOT follow carBottom)
+    personFeet: 600, personHeight: 200,
     minX: 260, maxX: 1500, minGap: 330, maxGap: 1240,
-    srcStart: 560, lisStart: 1240
+    srcStart: 400, lisStart: 1300
   };
 
   var SUBSTEP = 1 / 240;       // fixed physics step (s)
